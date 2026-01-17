@@ -1,0 +1,218 @@
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ================= BODY ================= */
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  color: #222;
+}
+
+/* ================= HEADER (Campus Style) ================= */
+.main-header {
+  background: #111;
+  color: #fff;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.tagline {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.main-header nav a {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.main-header nav a:hover {
+  color: #00c853;
+}
+
+/* ================= SECTIONS ================= */
+section {
+  padding: 40px 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* ================= PRODUCTS GRID ================= */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ================= PRODUCT CARD ================= */
+.product {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.product:hover {
+  transform: translateY(-5px);
+}
+
+.product img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product h3 {
+  margin: 12px 0 6px;
+}
+
+.product p {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* ================= BUTTON ================= */
+button {
+  background: #00c853;
+  border: none;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #009624;
+}
+
+/* ================= CART ================= */
+#cart {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+#cart-items {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+#cart-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+#cart-items button {
+  width: auto;
+  padding: 4px 8px;
+  margin-left: 5px;
+}
+
+/* ================= CHECKOUT ================= */
+#checkout {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+#checkout-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#checkout-form label {
+  margin-top: 10px;
+}
+
+#checkout-form input,
+#checkout-form textarea {
+  padding: 8px;
+  margin-top: 5px;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  background: #111;
+  color: #aaa;
+  text-align: center;
+  padding: 15px;
+  margin-top: 40px;
+}
+
+/* ================= HERO BANNER ================= */
+.hero {
+  height: 420px;
+  background: linear-gradient(
+      rgba(0,0,0,0.5),
+      rgba(0,0,0,0.5)
+    ),
+    url("images/running-shoes.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  text-align: center;
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.hero-btn {
+  background: #00c853;
+  color: white;
+  padding: 12px 25px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.hero-btn:hover {
+  background: #009624;
+}
+

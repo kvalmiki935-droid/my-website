@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="loadCart()">
+
+<header class="main-header">
+  <div class="logo">Your Cart</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="order-history.html">Orders</a>
+  </nav>
+</header>
+
+<section id="cart">
+  <ul id="cart-items"></ul>
+  <h3>Total: ₹<span id="total">0</span></h3>
+
+  <button onclick="placeOrder()">Place Order</button>
+</section>
+
+<script src="scripts.js"></script>
+</body>
+</html>

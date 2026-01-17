@@ -1,106 +1,105 @@
-document.addEventListener("DOMContentLoaded", function () {
+// ================= CART =================
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
-  const cartCount = document.getElementById("cart-count");
-  const cartItems = document.getElementById("cart-items");
-  const totalSpan = document.getElementById("total");
+function updateCartCount() {
+  document.querySelectorAll("#cart-count").forEach(el => {
+    el.innerText = cart.length;
+  });
+}
 
-  const productsSection = document.getElementById("products");
-  const cartSection = document.getElementById("cart");
+function addToCart(name, price) {
+  cart.push({ name, price });
+  saveCart();
+  updateCartCount();
+  alert(name + " added to cart ✅");
+}
 
-  // ---------------- ADD TO CART ----------------
-  document.querySelectorAll(".add-to-cart").forEach(button => {
-    button.addEventListener("click", function () {
+// ================= CART PAGE =================
+function loadCart() {
+  const list = document.getElementById("cart-items");
+  const totalEl = document.getElementById("total");
 
-      const product = this.parentElement;
-      const name = product.getAttribute("data-name");
-      const price = parseInt(product.getAttribute("data-price"));
+  if (!list) return;
 
-      const existing = cart.find(item => item.name === name);
+  list.innerHTML = "";
+  let total = 0;
 
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ name, price, qty: 1 });
-      }
+  cart.forEach((item, index) => {
+    total += item.price;
 
-      saveCart();
-      updateCart();
-      alert(name + " added to cart ✅");
-    });
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${item.name} - ₹${item.price}
+      <button onclick="removeItem(${index})">❌</button>
+    `;
+    list.appendChild(li);
   });
 
-  // ---------------- UPDATE CART ----------------
-  function updateCart() {
-    if (!cartItems) return;
+  totalEl.innerText = total;
+}
 
-    cartItems.innerHTML = "";
-    let total = 0;
-    let count = 0;
+function removeItem(index) {
+  cart.splice(index, 1);
+  saveCart();
+  loadCart();
+  updateCartCount();
+}
 
-    cart.forEach((item, index) => {
-      total += item.price * item.qty;
-      count += item.qty;
-
-      const li = document.createElement("li");
-      li.innerHTML = `
-        ${item.name} - ₹${item.price} × ${item.qty}
-        <button onclick="increase(${index})">+</button>
-        <button onclick="decrease(${index})">-</button>
-        <button onclick="removeItem(${index})">❌</button>
-      `;
-      cartItems.appendChild(li);
-    });
-
-    cartCount.innerText = count;
-    totalSpan.innerText = total;
+// ================= CHECKOUT =================
+function placeOrder() {
+  if (cart.length === 0) {
+    alert("Cart empty ❌");
+    return;
   }
 
-  // ---------------- CART ACTIONS ----------------
-  window.increase = function (i) {
-    cart[i].qty++;
-    saveCart();
-    updateCart();
-  };
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  window.decrease = function (i) {
-    if (cart[i].qty > 1) cart[i].qty--;
-    else cart.splice(i, 1);
-    saveCart();
-    updateCart();
-  };
+  orders.push({
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    items: cart
+  });
 
-  window.removeItem = function (i) {
-    cart.splice(i, 1);
-    saveCart();
-    updateCart();
-  };
+  localStorage.setItem("orders", JSON.stringify(orders));
+  localStorage.removeItem("cart");
 
-  function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cart));
+  cart = [];
+  updateCartCount();
+
+  alert("Order placed successfully 🎉");
+  window.location.href = "order-history.html";
+}
+
+// ================= ORDER HISTORY =================
+function loadOrders() {
+  const container = document.getElementById("orders");
+  if (!container) return;
+
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  if (orders.length === 0) {
+    container.innerHTML = "<p>No orders yet 😕</p>";
+    return;
   }
 
-  // ---------------- NAVIGATION ----------------
-  const productsLink = document.querySelector('a[href="#products"]');
-  const cartLink = document.querySelector('a[href="#cart"]');
+  orders.reverse().forEach(order => {
+    let html = `<div class="order">
+      <h3>Order ID: ${order.id}</h3>
+      <small>${order.date}</small>
+      <ul>`;
 
-  if (productsLink && cartLink) {
-    productsLink.addEventListener("click", e => {
-      e.preventDefault();
-      productsSection.style.display = "block";
-      cartSection.style.display = "none";
+    order.items.forEach(item => {
+      html += `<li>${item.name} - ₹${item.price}</li>`;
     });
 
-    cartLink.addEventListener("click", e => {
-      e.preventDefault();
-      productsSection.style.display = "none";
-      cartSection.style.display = "block";
-    });
-  }
+    html += `</ul></div>`;
+    container.innerHTML += html;
+  });
+}
 
-  updateCart();
-});
-
-
+updateCartCount();
 

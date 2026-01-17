@@ -1,105 +1,73 @@
-// ================= CART =================
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+document.addEventListener("DOMContentLoaded", () => {
 
-function saveCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function updateCartCount() {
-  document.querySelectorAll("#cart-count").forEach(el => {
-    el.innerText = cart.length;
-  });
-}
-
-function addToCart(name, price) {
-  cart.push({ name, price });
-  saveCart();
-  updateCartCount();
-  alert(name + " added to cart ✅");
-}
-
-// ================= CART PAGE =================
-function loadCart() {
-  const list = document.getElementById("cart-items");
-  const totalEl = document.getElementById("total");
-
-  if (!list) return;
-
-  list.innerHTML = "";
+  let cart = [];
   let total = 0;
 
-  cart.forEach((item, index) => {
-    total += item.price;
+  const cartCount = document.getElementById("cart-count");
+  const cartItems = document.getElementById("cart-items");
+  const totalSpan = document.getElementById("total");
 
-    const li = document.createElement("li");
-    li.innerHTML = `
-      ${item.name} - ₹${item.price}
-      <button onclick="removeItem(${index})">❌</button>
-    `;
-    list.appendChild(li);
+  const productsSection = document.getElementById("products");
+  const cartSection = document.getElementById("cart");
+
+  const cartLink = document.querySelector('a[href="#cart"]');
+  const backBtn = document.getElementById("back-to-products");
+
+  /* ================= ADD TO CART ================= */
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      const product = btn.closest(".product");
+      const name = product.dataset.name;
+      const price = parseInt(product.dataset.price);
+
+      cart.push({ name, price });
+      total += price;
+
+      updateCart();
+      alert(name + " added to cart ✅");
+    });
   });
 
-  totalEl.innerText = total;
-}
+  /* ================= UPDATE CART ================= */
+  function updateCart() {
+    cartItems.innerHTML = "";
 
-function removeItem(index) {
-  cart.splice(index, 1);
-  saveCart();
-  loadCart();
-  updateCartCount();
-}
-
-// ================= CHECKOUT =================
-function placeOrder() {
-  if (cart.length === 0) {
-    alert("Cart empty ❌");
-    return;
-  }
-
-  const orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-  orders.push({
-    id: Date.now(),
-    date: new Date().toLocaleString(),
-    items: cart
-  });
-
-  localStorage.setItem("orders", JSON.stringify(orders));
-  localStorage.removeItem("cart");
-
-  cart = [];
-  updateCartCount();
-
-  alert("Order placed successfully 🎉");
-  window.location.href = "order-history.html";
-}
-
-// ================= ORDER HISTORY =================
-function loadOrders() {
-  const container = document.getElementById("orders");
-  if (!container) return;
-
-  const orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-  if (orders.length === 0) {
-    container.innerHTML = "<p>No orders yet 😕</p>";
-    return;
-  }
-
-  orders.reverse().forEach(order => {
-    let html = `<div class="order">
-      <h3>Order ID: ${order.id}</h3>
-      <small>${order.date}</small>
-      <ul>`;
-
-    order.items.forEach(item => {
-      html += `<li>${item.name} - ₹${item.price}</li>`;
+    cart.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${item.name} - ₹${item.price}
+        <button onclick="removeItem(${index})">❌</button>
+      `;
+      cartItems.appendChild(li);
     });
 
-    html += `</ul></div>`;
-    container.innerHTML += html;
-  });
-}
+    cartCount.innerText = cart.length;
+    totalSpan.innerText = total;
+  }
 
-updateCartCount();
+  /* ================= REMOVE ITEM ================= */
+  window.removeItem = function(index) {
+    total -= cart[index].price;
+    cart.splice(index, 1);
+    updateCart();
+  };
+
+  /* ================= OPEN CART ================= */
+  cartLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    productsSection.style.display = "none";
+    cartSection.style.display = "block";
+    window.scrollTo(0, 0);
+  });
+
+  /* ================= BACK TO PRODUCTS ================= */
+  backBtn.addEventListener("click", () => {
+    cartSection.style.display = "none";
+    productsSection.style.display = "block";
+    window.scrollTo(0, 0);
+  });
+
+});
+
 

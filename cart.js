@@ -6,33 +6,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSpan = document.getElementById("total");
   const cartCount = document.getElementById("cart-count");
 
-  cartItems.innerHTML = "";
-  let total = 0;
-  let count = 0;
+  function renderCart() {
+    cartItems.innerHTML = "";
+    let total = 0;
+    let count = 0;
 
-  cart.forEach((item, index) => {
+    cart.forEach((item, index) => {
+      if (!item.qty) item.qty = 1;
 
-    // 🔥 FIX for old data
-    if (!item.qty) item.qty = 1;
+      total += item.price * item.qty;
+      count += item.qty;
 
-    const li = document.createElement("li");
-    li.innerHTML = `
-      ${item.name} × ${item.qty} - ₹${item.price * item.qty}
-      <button onclick="removeItem(${index})">❌</button>
-    `;
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${item.name}</strong> – ₹${item.price}
+        <br>
+        <button onclick="changeQty(${index}, -1)">−</button>
+        <span style="margin:0 10px">${item.qty}</span>
+        <button onclick="changeQty(${index}, 1)">+</button>
+        <button onclick="removeItem(${index})" style="margin-left:15px">❌</button>
+      `;
+      cartItems.appendChild(li);
+    });
 
-    cartItems.appendChild(li);
-    total += item.price * item.qty;
-    count += item.qty;
-  });
+    totalSpan.innerText = total;
+    cartCount.innerText = count;
 
-  totalSpan.innerText = total;
-  cartCount.innerText = count;
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  window.changeQty = function (index, change) {
+    cart[index].qty += change;
+    if (cart[index].qty <= 0) {
+      cart.splice(index, 1);
+    }
+    renderCart();
+  };
+
+  window.removeItem = function (index) {
+    cart.splice(index, 1);
+    renderCart();
+  };
+
+  renderCart();
 });
-
-function removeItem(index) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload();
-}

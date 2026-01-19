@@ -1,63 +1,76 @@
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-function updateCartCount() {
-  let count = document.getElementById("cart-count");
-  if (count) count.innerText = cart.length;
-}
-
-function saveCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-  updateCartCount();
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const cartCount = document.getElementById("cart-count");
+  const cartItems = document.getElementById("cart-items");
+  const totalSpan = document.getElementById("total");
 
   document.querySelectorAll(".add-to-cart").forEach(btn => {
-    btn.onclick = () => {
-      let p = btn.parentElement;
-      cart.push({
-        name: p.dataset.name,
-        price: p.dataset.price
-      });
+    btn.addEventListener("click", () => {
+      const product = btn.parentElement;
+      const name = product.dataset.name;
+      const price = parseInt(product.dataset.price);
+
+      const item = cart.find(p => p.name === name);
+      if (item) {
+        item.qty++;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+
       saveCart();
-      updateCartCount();
-      alert("Added to cart");
-    };
+      updateCount();
+      alert(name + " added to cart");
+    });
   });
 
-  let list = document.getElementById("cart-items");
-  let total = document.getElementById("total");
+  function renderCart() {
+    if (!cartItems) return;
 
-  if (list) {
-    let sum = 0;
-    cart.forEach((item, i) => {
-      sum += Number(item.price);
-      let li = document.createElement("li");
-      li.innerHTML = `${item.name} - ₹${item.price}
-        <button onclick="removeItem(${i})">❌</button>`;
-      list.appendChild(li);
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price * item.qty;
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${item.name} - ₹${item.price} × ${item.qty}
+        <button onclick="changeQty(${index},1)">+</button>
+        <button onclick="changeQty(${index},-1)">−</button>
+        <button onclick="removeItem(${index})">❌</button>
+      `;
+      cartItems.appendChild(li);
     });
-    total.innerText = sum;
+
+    totalSpan.innerText = total;
+    updateCount();
   }
 
-  let form = document.getElementById("checkout-form");
-  if (form) {
-    form.onsubmit = () => {
-      let orders = JSON.parse(localStorage.getItem("orders")) || [];
-      orders.push("Order of ₹" + cart.reduce((a,b)=>a+Number(b.price),0));
-      localStorage.setItem("orders", JSON.stringify(orders));
-      localStorage.removeItem("cart");
-      alert("Order placed!");
-      location.href = "orders.html";
-      return false;
-    };
+  window.changeQty = function (i, v) {
+    cart[i].qty += v;
+    if (cart[i].qty <= 0) cart.splice(i, 1);
+    saveCart();
+    renderCart();
+  };
+
+  window.removeItem = function (i) {
+    cart.splice(i, 1);
+    saveCart();
+    renderCart();
+  };
+
+  function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
   }
+
+  function updateCount() {
+    if (cartCount)
+      cartCount.innerText = cart.reduce((s, i) => s + i.qty, 0);
+  }
+
+  renderCart();
 });
-
-function removeItem(i) {
-  cart.splice(i,1);
-  saveCart();
-  location.reload();
-}
 
 

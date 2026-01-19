@@ -6,12 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSpan = document.getElementById("total");
   const cartCount = document.getElementById("cart-count");
 
-  let total = 0;
   cartItems.innerHTML = "";
+  let total = 0;
+  let count = 0;
 
   cart.forEach((item, index) => {
-    const li = document.createElement("li");
 
+    // 🔥 FIX for old data
+    if (!item.qty) item.qty = 1;
+
+    const li = document.createElement("li");
     li.innerHTML = `
       ${item.name} × ${item.qty} - ₹${item.price * item.qty}
       <button onclick="removeItem(${index})">❌</button>
@@ -19,14 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cartItems.appendChild(li);
     total += item.price * item.qty;
+    count += item.qty;
   });
 
   totalSpan.innerText = total;
-  cartCount.innerText = cart.reduce((s, i) => s + i.qty, 0);
-
+  cartCount.innerText = count;
 });
 
-/* REMOVE ITEM */
 function removeItem(index) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.splice(index, 1);

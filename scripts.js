@@ -1,21 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  const products = document.querySelectorAll(".product");
-  const searchInput = document.getElementById("search");
-  const sizeFilter = document.getElementById("size-filter");
   const cartCount = document.getElementById("cart-count");
 
   updateCartCount();
 
   document.querySelectorAll(".add-to-cart").forEach(btn => {
     btn.addEventListener("click", () => {
-      const p = btn.parentElement;
+      const p = btn.closest(".product, .card");
       const name = p.dataset.name;
-      const price = parseInt(p.dataset.price);
+      const price = Number(p.dataset.price);
 
-      cart.push({ name, price });
+      let item = cart.find(i => i.name === name);
+
+      if (item) {
+        item.qty += 1;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCartCount();
       alert(name + " added to cart");
@@ -23,27 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function updateCartCount() {
-    cartCount.innerText = cart.length;
+    if (cartCount) {
+      cartCount.innerText = cart.reduce((s, i) => s + i.qty, 0);
+    }
   }
-
-  function filterProducts() {
-    const text = searchInput.value.toLowerCase();
-    const size = sizeFilter.value;
-
-    products.forEach(p => {
-      const name = p.dataset.name.toLowerCase();
-      const sizes = p.dataset.size.split(",");
-
-      let matchText = name.includes(text);
-      let matchSize = size === "all" || sizes.includes(size);
-
-      p.style.display = matchText && matchSize ? "block" : "none";
-    });
-  }
-
-  searchInput.addEventListener("keyup", filterProducts);
-  sizeFilter.addEventListener("change", filterProducts);
-
 });
 
 

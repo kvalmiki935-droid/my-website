@@ -216,3 +216,19 @@ footer {
   background: #009624;
 }
 
+/* FILTER BAR */
+.filter-bar {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.filter-bar select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+

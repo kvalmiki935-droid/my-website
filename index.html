@@ -1,26 +1,26 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Store</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<title>Shoe Store</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="main-header">
+
+<header class="main-header">
   <div class="logo">
     Shoe Store
     <div class="tagline">Premium Footwear Collection</div>
   </div>
-
   <nav>
     <a href="index.html">Home</a>
     <a href="men/index.html">Men</a>
     <a href="women/index.html">Women</a>
     <a href="kids/index.html">Kids</a>
-    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+    <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
   </nav>
 </header>
+
 <section class="hero">
   <div class="hero-content">
     <h1>Step Into Style</h1>
@@ -29,52 +29,34 @@
   </div>
 </section>
 
-    
-    <section id="products">
-        <h2>Our Shoes</h2>
-        <div class="product-list">
-            <div class="product" data-id="1" data-name="Running Shoes" data-price="500">
-                <img src="images/running-shoes.jpg" alt="Running Shoes"> 
-                <h3>Running Shoes</h3>
-                <p>$500</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-            <div class="product" data-id="2" data-name="Sneakers" data-price="1200">
-               <img src="images/sneakers.jpg" alt="Sneakers">
-                <h3>Sneakers</h3>
-                <p>$1200</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-            <div class="product" data-id="3" data-name="Boots" data-price="300">
-               <img src="images/boots.jpg" alt="Boots">
-                <h3>Boots</h3>
-                <p>$300</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-        </div>
-    </section>
-    
-    <section id="cart" style="display: none;">
-        <h2>Your Cart</h2>
-        <ul id="cart-items"></ul>
-        <p>Total: $<span id="total">0</span></p>
-        <button id="checkout-btn">Checkout</button>
-        <button id="back-to-products">Back to Products</button>
-    </section>
-    
-    <section id="checkout" style="display: none;">
-        <h2>Checkout</h2>
-        <form id="checkout-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" required>
-            <label for="address">Address:</label>
-            <textarea id="address" required></textarea>
-            <button type="submit">Place Order</button>
-        </form>
-    </section>
-    
-   <script src="scripts.js"></script>
+<section>
+  <h2>Our Shoes</h2>
+  <div class="product-list">
+
+    <div class="product" data-name="Running Shoes" data-price="500">
+      <img src="images/running-shoes.jpg">
+      <h3>Running Shoes</h3>
+      <p>₹500</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-name="Sneakers" data-price="1200">
+      <img src="images/sneakers.jpg">
+      <h3>Sneakers</h3>
+      <p>₹1200</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-name="Boots" data-price="300">
+      <img src="images/boots.jpg">
+      <h3>Boots</h3>
+      <p>₹300</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<script src="scripts.js"></script>
 </body>
 </html>

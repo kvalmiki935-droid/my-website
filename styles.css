@@ -231,4 +231,11 @@ footer {
   border: 1px solid #ccc;
 }
 
+.filter-bar input {
+  padding: 10px;
+  width: 220px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
 

@@ -1,28 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Orders</title>
+<meta charset="UTF-8">
+<title>Order History</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="main-header">
-  <div class="logo">Order History</div>
+  <div class="logo">Shoe Store</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart</a>
+  </nav>
 </header>
 
-<section>
-  <ul id="orders"></ul>
+<section style="max-width:900px; margin:auto; padding:40px">
+  <h2>Your Orders</h2>
+  <div id="orders"></div>
 </section>
 
 <script>
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-let ul = document.getElementById("orders");
+const ordersDiv = document.getElementById("orders");
+const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-orders.forEach(o => {
-  let li = document.createElement("li");
-  li.innerText = o;
-  ul.appendChild(li);
+if(orders.length === 0){
+  ordersDiv.innerHTML = "<p>No orders yet.</p>";
+}
+
+orders.forEach(order => {
+  let total = 0;
+
+  let html = `
+    <div style="background:#fff;padding:20px;margin-bottom:20px;border-radius:8px">
+      <h3>Order ID: ${order.id}</h3>
+      <p>Date: ${order.date}</p>
+      <ul>
+  `;
+
+  order.items.forEach(item => {
+    total += item.price * item.qty;
+    html += `<li>${item.name} × ${item.qty} — ₹${item.price}</li>`;
+  });
+
+  html += `
+      </ul>
+      <strong>Total: ₹${total}</strong>
+    </div>
+  `;
+
+  ordersDiv.innerHTML += html;
 });
 </script>
+
 </body>
 </html>
+

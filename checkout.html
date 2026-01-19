@@ -8,7 +8,15 @@
 <body>
 
 <header class="main-header">
-  <div class="logo">Shoe Store</div>
+  <div class="logo">
+    Shoe Store
+    <div class="tagline">Premium Footwear Collection</div>
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">Orders</a>
+  </nav>
 </header>
 
 <section id="checkout">
@@ -16,13 +24,13 @@
 
   <form id="checkout-form">
     <label>Name</label>
-    <input type="text" required>
+    <input type="text" id="name" required>
 
     <label>Email</label>
-    <input type="email" required>
+    <input type="email" id="email" required>
 
     <label>Address</label>
-    <textarea required></textarea>
+    <textarea id="address" required></textarea>
 
     <button type="submit">Place Order</button>
   </form>
@@ -31,10 +39,42 @@
 <script>
 document.getElementById("checkout-form").addEventListener("submit", function(e){
   e.preventDefault();
+
+  // 1️⃣ Cart read
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+
+  // 2️⃣ Orders read
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  // 3️⃣ New order object
+  const newOrder = {
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    customer: {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      address: document.getElementById("address").value
+    },
+    items: cart
+  };
+
+  // 4️⃣ Save order
+  orders.push(newOrder);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  // 5️⃣ Clear cart
   localStorage.removeItem("cart");
-  window.location.href = "success.html";
+
+  // 6️⃣ Redirect to orders page
+  window.location.href = "orders.html";
 });
 </script>
 
 </body>
 </html>
+

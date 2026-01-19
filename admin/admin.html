@@ -4,56 +4,118 @@
 <meta charset="UTF-8">
 <title>Admin Panel</title>
 <link rel="stylesheet" href="../styles.css">
+
+<style>
+body {
+  background:#f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+.admin-box {
+  max-width:900px;
+  margin:60px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+input {
+  width:100%;
+  padding:10px;
+  margin:15px 0;
+}
+
+button {
+  background:#00c853;
+  color:#fff;
+  border:none;
+  padding:10px 20px;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+button:hover {
+  background:#009624;
+}
+
+.hidden {
+  display:none;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td {
+  border:1px solid #ddd;
+  padding:10px;
+  text-align:left;
+}
+
+th {
+  background:#f0f0f0;
+}
+
+.clear-btn {
+  background:red;
+  margin-top:20px;
+}
+</style>
 </head>
+
 <body>
 
 <header class="main-header">
-  <div class="logo">Admin Panel</div>
+  <div class="logo">
+    Admin Panel
+    <div class="tagline">Order Management</div>
+  </div>
 </header>
 
-<section style="max-width:900px;margin:auto;padding:30px">
+<!-- LOGIN -->
+<div class="admin-box" id="login-box">
+  <h2>Admin Login</h2>
+  <input type="password" id="admin-pass" placeholder="Enter Admin Password">
+  <button id="login-btn">Login</button>
+</div>
 
-  <!-- LOGIN -->
-  <div id="login-box">
-    <h2>Admin Login</h2>
-    <input type="password" id="admin-pass" placeholder="Enter Admin Password">
-    <button onclick="login()">Login</button>
-  </div>
+<!-- DASHBOARD -->
+<div class="admin-box hidden" id="dashboard">
+  <h2>All Orders</h2>
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" style="display:none">
-    <h2>Orders</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Items</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="orders-table"></tbody>
+  </table>
 
-    <table width="100%" border="1" cellpadding="10">
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Date</th>
-          <th>Items</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="orders-table"></tbody>
-    </table>
-
-    <br>
-    <button onclick="clearOrders()" style="background:red">Clear All Orders</button>
-  </div>
-
-</section>
+  <button class="clear-btn" onclick="clearOrders()">Clear All Orders</button>
+</div>
 
 <script>
-const PASSWORD = "B3smart#"; // 🔐 CHANGE THIS
+const ADMIN_PASSWORD = "B3smart#"; // 🔐 CHANGE PASSWORD HERE
+
+document.getElementById("login-btn").addEventListener("click", login);
 
 function login() {
-  const pass = document.getElementById("admin-pass").value;
-  if (pass === PASSWORD) {
-    document.getElementById("login-box").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    loadOrders();
-  } else {
-    alert("Wrong Password");
+  const pass = document.getElementById("admin-pass").value.trim();
+
+  if (pass !== ADMIN_PASSWORD) {
+    alert("Wrong Password ❌");
+    return;
   }
+
+  document.getElementById("login-box").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  loadOrders();
 }
 
 function loadOrders() {
@@ -62,18 +124,30 @@ function loadOrders() {
   table.innerHTML = "";
 
   if (orders.length === 0) {
-    table.innerHTML = "<tr><td colspan='4'>No Orders</td></tr>";
+    table.innerHTML = "<tr><td colspan='4'>No Orders Found</td></tr>";
     return;
   }
 
-  orders.forEach(o => {
-    let items = o.items.map(i => `${i.name} x ${i.qty}`).join("<br>");
+  orders.forEach((o, index) => {
+
+    // 🔁 SUPPORT BOTH OLD & NEW ORDER STRUCTURE
+    let itemsHTML = "";
+
+    if (o.items && Array.isArray(o.items)) {
+      itemsHTML = o.items.map(i => `${i.name} × ${i.qty}`).join("<br>");
+    } else {
+      itemsHTML = "Items not saved properly";
+    }
+
+    const date = o.date || "N/A";
+    const total = o.total || 0;
+
     table.innerHTML += `
       <tr>
-        <td>${o.id}</td>
-        <td>${o.date}</td>
-        <td>${items}</td>
-        <td>₹${o.total}</td>
+        <td>${index + 1}</td>
+        <td>${date}</td>
+        <td>${itemsHTML}</td>
+        <td>₹${total}</td>
       </tr>
     `;
   });
@@ -89,3 +163,4 @@ function clearOrders() {
 
 </body>
 </html>
+
